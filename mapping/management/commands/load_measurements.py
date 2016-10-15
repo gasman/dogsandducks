@@ -13,7 +13,7 @@ class Command(BaseCommand):
     help = "Import phosphate measurements from Environment Agency data"
 
     def handle(self, *args, **options):
-        RESULT_COUNT = 1000
+        RESULT_COUNT = 10000
         BASE_URL = "http://environment.data.gov.uk/water-quality/data/measurement.json?"
         offset = 0
 

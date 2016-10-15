@@ -17,7 +17,12 @@ class Command(BaseCommand):
         with open(options['filename']) as csv_file:
             reader = csv.DictReader(csv_file)
             for row in reader:
-                t = datetime.datetime.fromtimestamp(int(float(row['1305891095'])))
+                timestamp = int(float(row['1305891095']))
+                if timestamp > 0:
+                    t = datetime.datetime.fromtimestamp(timestamp)
+                else:
+                    t = None
+
                 Photo.objects.get_or_create(
                     lat=row['Unnamed__1'],
                     lng=row['Unnamed_ 1'],
