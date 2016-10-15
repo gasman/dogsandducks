@@ -24,22 +24,78 @@
             });
 
             var infowindow = new google.maps.InfoWindow();
+            var photowindow = new google.maps.InfoWindow();
 
-            function addMarker(lat, lng, label) {
+            function getColorForResult(result) {
+                if (result < 0.5) {
+                    return '#0000ff';
+                } else if (result < 0.1) {
+                    return '#1100ee';
+                } else if (result < 0.2) {
+                    return '#2200dd';
+                } else if (result < 0.3) {
+                    return '#3300cc';
+                } else if (result < 0.4) {
+                    return '#4400bb';
+                } else if (result < 0.5) {
+                    return '#5500aa';
+                } else if (result < 0.6) {
+                    return '#660099';
+                } else if (result < 0.8) {
+                    return '#770088';
+                } else if (result < 1.0) {
+                    return '#880077';
+                } else if (result < 1.2) {
+                    return '#990066';
+                } else if (result < 1.4) {
+                    return '#aa0055';
+                } else if (result < 1.6) {
+                    return '#bb0044';
+                } else if (result < 1.8) {
+                    return '#cc0033';
+                } else if (result < 2.0) {
+                    return '#dd0022';
+                } else if (result < 2.4) {
+                    return '#ee0011';
+                } else {
+                    return '#ff0000';
+                }
+            }
+
+            function addSamplingPoint(lat, lng, label, result) {
                 var marker = new google.maps.Marker({
                     position: {'lat': lat, 'lng': lng},
-                    icon: {path: google.maps.SymbolPath.CIRCLE, scale: 3},
+                    icon: {path: google.maps.SymbolPath.CIRCLE, scale: 4, strokeColor: getColorForResult(result)},
                     map: map
                 });
                 marker.addListener('click', function() {
-                    infowindow.setContent(label);
+                    infowindow.setContent(label + '(' + result + ')');
                     infowindow.open(map, marker);
                 });
             }
 
-            $.getJSON('/sampling-points/', function(data) {
+            function addPhoto(lat, lng, imageUrl) {
+                var marker = new google.maps.Marker({
+                    position: {'lat': lat, 'lng': lng},
+                    icon: '/static/icons/photo.png',
+                    map: map
+                });
+                marker.addListener('click', function() {
+                    photowindow.setContent('<img src="' + imageUrl + '">');
+                    photowindow.open(map, marker);
+                });
+            }
+
+            $.getJSON('/measurements/0180/{{ season }}/', function(data) {
+            // $.getJSON('/sampling-points/', function(data) {
                 for (var point of data.items) {
-                    addMarker(point.lat, point.lng, point.label);
+                    addSamplingPoint(point.lat, point.lng, point.label, point.result);
+                }
+            });
+
+            $.getJSON('/photos/{{ season }}/', function(data) {
+                for (var point of data.items) {
+                    addPhoto(point.lat, point.lng, point.image_url);
                 }
             });
 

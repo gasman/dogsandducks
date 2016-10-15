@@ -19,7 +19,9 @@ from django.contrib import admin
 from mapping import views as mapping_views
 
 urlpatterns = [
-    url(r'^$', mapping_views.index),
+    url(r'^(summer|winter|all)/$', mapping_views.index),
     url(r'^sampling-points/$', mapping_views.sampling_points),
+    url(r'^measurements/(\w+)/(\w+)/$', mapping_views.measurements),
+    url(r'^photos/(\w+)/$', mapping_views.photos),
     url(r'^admin/', admin.site.urls),
 ]

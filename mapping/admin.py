@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from mapping.models import Determinand
+
+admin.site.register(Determinand)
